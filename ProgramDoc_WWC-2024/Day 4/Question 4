@@ -1,0 +1,119 @@
+/*
+4. Hospital Resource Allocation
+A hospital management system needs to sort incoming patients in the emergency department based on triage priority, severity of condition, and arrival time. 
+The sorted list determines the order in which patients are seen by medical professionals. Additionally, during peak times, the system must dynamically adjust the sorting as new patients arrive, 
+ensuring that life-threatening cases are prioritized while maintaining fairness*/
+
+
+CODE::--
+
+#include <iostream>
+#include <vector>
+#include <string>
+#include <algorithm>
+
+// Structure to represent a patient
+struct Patient {
+    std::string name;
+    int triagePriority; // Higher value indicates higher priority
+    int severity;       // Severity of condition (scale: 1-10, higher is more severe)
+    int arrivalTime;    // Lower value means earlier arrival time
+
+    // Constructor
+    Patient(const std::string& n, int tp, int s, int at)
+        : name(n), triagePriority(tp), severity(s), arrivalTime(at) {}
+};
+
+// Comparator to sort patients dynamically
+bool sortByPriority(const Patient& a, const Patient& b) {
+    // Primary: Triage priority (higher is better)
+    if (a.triagePriority != b.triagePriority)
+        return a.triagePriority > b.triagePriority;
+
+    // Secondary: Severity of condition (higher is more urgent)
+    if (a.severity != b.severity)
+        return a.severity > b.severity;
+
+    // Tertiary: Arrival time (earlier is better)
+    return a.arrivalTime < b.arrivalTime;
+}
+
+class Hospital {
+private:
+    std::vector<Patient> patients;
+
+public:
+    // Add a new patient to the list
+    void addPatient(const std::string& name, int triagePriority, int severity, int arrivalTime) {
+        patients.push_back(Patient(name, triagePriority, severity, arrivalTime));
+        // Sort the patients after adding a new one
+        std::sort(patients.begin(), patients.end(), sortByPriority);
+    }
+
+    // Display the list of patients (sorted)
+    void displayPatients() {
+        std::cout << "\nSorted Patient List (by Priority):\n";
+        for (const auto& patient : patients) {
+            std::cout << "Name: " << patient.name
+                      << ", Triage Priority: " << patient.triagePriority
+                      << ", Severity: " << patient.severity
+                      << ", Arrival Time: " << patient.arrivalTime << "\n";
+        }
+    }
+
+    // Remove a patient after they have been seen
+    void removePatient(const std::string& name) {
+        auto it = std::find_if(patients.begin(), patients.end(),
+                               [&name](const Patient& p) { return p.name == name; });
+
+        if (it != patients.end()) {
+            patients.erase(it);
+            std::cout << "Patient " << name << " has been removed from the queue.\n";
+        } else {
+            std::cout << "Patient not found.\n";
+        }
+    }
+};
+
+int main() {
+    Hospital hospital;
+
+    // Simulating patient arrivals
+    hospital.addPatient("John Doe", 3, 8, 10);  // Triage: 3, Severity: 8, Arrival: 10
+    hospital.addPatient("Alice Smith", 5, 9, 12);  // Triage: 5, Severity: 9, Arrival: 12
+    hospital.addPatient("Bob Brown", 5, 8, 8);   // Triage: 5, Severity: 8, Arrival: 8
+    hospital.addPatient("Eve White", 4, 10, 11);  // Triage: 4, Severity: 10, Arrival: 11
+    hospital.addPatient("Charlie Black", 2, 5, 9); // Triage: 2, Severity: 5, Arrival: 9
+
+    // Display the sorted patient list
+    hospital.displayPatients();
+
+    // Removing a patient after they are seen
+    hospital.removePatient("Alice Smith");
+
+    // Display the updated patient list
+    hospital.displayPatients();
+
+    return 0;
+}
+
+
+OUTPUT::-
+
+
+Sorted Patient List (by Priority):
+Name: Alice Smith, Triage Priority: 5, Severity: 9, Arrival Time: 12
+Name: Bob Brown, Triage Priority: 5, Severity: 8, Arrival Time: 8
+Name: Eve White, Triage Priority: 4, Severity: 10, Arrival Time: 11
+Name: John Doe, Triage Priority: 3, Severity: 8, Arrival Time: 10
+Name: Charlie Black, Triage Priority: 2, Severity: 5, Arrival Time: 9
+
+Patient Alice Smith has been removed from the queue.
+
+Sorted Patient List (by Priority):
+Name: Bob Brown, Triage Priority: 5, Severity: 8, Arrival Time: 8
+Name: Eve White, Triage Priority: 4, Severity: 10, Arrival Time: 11
+Name: John Doe, Triage Priority: 3, Severity: 8, Arrival Time: 10
+Name: Charlie Black, Triage Priority: 2, Severity: 5, Arrival Time: 9
+
+
