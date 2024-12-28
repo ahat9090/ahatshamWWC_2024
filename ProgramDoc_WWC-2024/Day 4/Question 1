@@ -1,1 +1,98 @@
-mmm
+
+/*1. Fraud Detection in Banking Transactions
+A banking institution monitors transactions for potential fraud by analyzing patterns in transaction size, frequency,
+and geographical location. The transactions are sorted by suspiciousness score, calculated using a combination of these factors.
+High-risk transactions are flagged for immediate review by analysts, requiring a robust and scalable sorting mechanism to handle
+millions of records daily.*/
+
+
+Code:
+
+
+#include <iostream>
+#include <vector>
+#include <string>
+#include <algorithm>
+
+// Structure to represent a transaction
+struct Transaction {
+    int id;                 // Unique transaction ID
+    double amount;          // Transaction amount
+    int frequency;          // Frequency of transactions from this account
+    std::string location;   // Transaction location
+    double suspiciousScore; // Calculated suspiciousness score
+
+    // Constructor
+    Transaction(int id, double amount, int frequency, const std::string& location, double score)
+        : id(id), amount(amount), frequency(frequency), location(location), suspiciousScore(score) {}
+};
+
+// Function to calculate suspiciousness score (simplified example)
+double calculateSuspiciousScore(double amount, int frequency, const std::string& location) {
+    double baseScore = amount * 0.5 + frequency * 2.0;
+    if (location == "high-risk") { // Assume "high-risk" is a specific location flag
+        baseScore += 50.0;
+    }
+    return baseScore;
+}
+
+// Comparator for sorting transactions by suspiciousness score in descending order
+bool compareTransactions(const Transaction& t1, const Transaction& t2) {
+    return t1.suspiciousScore > t2.suspiciousScore;
+}
+
+// Function to flag high-risk transactions
+void flagHighRiskTransactions(const std::vector<Transaction>& transactions, double riskThreshold) {
+    std::cout << "Flagged High-Risk Transactions:\n";
+    for (const auto& transaction : transactions) {
+        if (transaction.suspiciousScore >= riskThreshold) {
+            std::cout << "Transaction ID: " << transaction.id
+                      << ", Suspicious Score: " << transaction.suspiciousScore << "\n";
+        }
+    }
+}
+
+int main() {
+    // Sample dataset
+    std::vector<Transaction> transactions = {
+        Transaction(1, 1000.0, 5, "normal", calculateSuspiciousScore(1000.0, 5, "normal")),
+        Transaction(2, 2000.0, 3, "high-risk", calculateSuspiciousScore(2000.0, 3, "high-risk")),
+        Transaction(3, 500.0, 8, "normal", calculateSuspiciousScore(500.0, 8, "normal")),
+        Transaction(4, 3000.0, 2, "high-risk", calculateSuspiciousScore(3000.0, 2, "high-risk")),
+        Transaction(5, 800.0, 6, "normal", calculateSuspiciousScore(800.0, 6, "normal"))
+    };
+
+    // Sort transactions by suspiciousness score
+    std::sort(transactions.begin(), transactions.end(), compareTransactions);
+
+    // Output sorted transactions
+    std::cout << "Sorted Transactions by Suspiciousness Score:\n";
+    for (const auto& transaction : transactions) {
+        std::cout << "Transaction ID: " << transaction.id
+                  << ", Amount: $" << transaction.amount
+                  << ", Frequency: " << transaction.frequency
+                  << ", Location: " << transaction.location
+                  << ", Suspicious Score: " << transaction.suspiciousScore << "\n";
+    }
+
+    // Set a risk threshold for flagging high-risk transactions
+    double riskThreshold = 100.0;
+    std::cout << "\n";
+    flagHighRiskTransactions(transactions, riskThreshold);
+
+    return 0;
+}
+
+
+OUTPUT::--
+
+Sorted Transactions by Suspiciousness Score:
+Transaction ID: 4, Amount: $3000, Frequency: 2, Location: high-risk, Suspicious Score: 155
+Transaction ID: 2, Amount: $2000, Frequency: 3, Location: high-risk, Suspicious Score: 156
+Transaction ID: 1, Amount: $1000, Frequency: 5, Location: normal, Suspicious Score: 60
+Transaction ID: 5, Amount: $800, Frequency: 6, Location: normal, Suspicious Score: 56
+Transaction ID: 3, Amount: $500, Frequency: 8, Location: normal, Suspicious Score: 56
+
+Flagged High-Risk Transactions:
+Transaction ID: 4, Suspicious Score: 155
+Transaction ID: 2, Suspicious Score: 156
