@@ -1220,6 +1220,288 @@ Advertiser: Brand C, Bid Amount: $450, Engagement Rate: 0.80, Remaining Budget: 
 
 ......................................................DAY-5..................................................................................
 
+Que.1 - Searching a Number 
+
+Given an integer k and array arr. Your task is to return the position of the first occurrence of k in the given array and if element k is not present in the array then return -1.
+
+Note: 1-based indexing is followed here.
+
+Examples:
+
+Input: k = 16 , arr = [9, 7, 16, 16, 4]
+Output: 3
+Explanation: The value 16 is found in the given array at positions 3 and 4, with position 3 being the first occurrence.
+Input: k=98 , arr = [1, 22, 57, 47, 34, 18, 66]
+Output: -1
+Explanation: k = 98 isn't found in the given array.
+Expected Time Complexity: O(n)
+Expected Auxiliary Space: O(1)
+
+Constraints:
+1 <= arr.size <= 106
+1 <= arr[i] <= 109
+1 <= k <= 106
+
+Code:--
+
+
+#include <iostream>
+#include <vector>
+using namespace std;
+
+int findFirstOccurrence(int k, const vector<int>& arr) {
+    for (int i = 0; i < arr.size(); i++) {
+        if (arr[i] == k) {
+            return i + 1; // Return 1-based index
+        }
+    }
+    return -1; // Return -1 if k is not found
+}
+
+int main() {
+    // Example 1
+    int k1 = 16;
+    vector<int> arr1 = {9, 7, 16, 16, 4};
+    cout << findFirstOccurrence(k1, arr1) << endl; // Output: 3
+
+    // Example 2
+    int k2 = 98;
+    vector<int> arr2 = {1, 22, 57, 47, 34, 18, 66};
+    cout << findFirstOccurrence(k2, arr2) << endl; // Output: -1
+
+    return 0;
+}
+
+Que2:-- Sorted Array search.
+
+Code:
+#include <iostream>
+#include <vector>
+using namespace std;
+
+int findFirstOccurrence(int k, const vector<int>& arr) {
+    int left = 0, right = arr.size() - 1;
+    int result = -1; // Store the index of the first occurrence
+
+    while (left <= right) {
+        int mid = left + (right - left) / 2;
+
+        if (arr[mid] == k) {
+            result = mid + 1; // Store the 1-based index
+            right = mid - 1;  // Move left to find the first occurrence
+        } else if (arr[mid] < k) {
+            left = mid + 1; // Search in the right half
+        } else {
+            right = mid - 1; // Search in the left half
+        }
+    }
+
+    return result; // Returns -1 if not found
+}
+
+int main() {
+    // Example 1
+    int k1 = 16;
+    vector<int> arr1 = {4, 7, 16, 16, 20, 25};
+    cout << findFirstOccurrence(k1, arr1) << endl; // Output: 3
+
+    // Example 2
+    int k2 = 98;
+    vector<int> arr2 = {1, 22, 57, 57, 66, 99};
+    cout << findFirstOccurrence(k2, arr2) << endl; // Output: -1
+
+    return 0;
+}
+
+Que 3..
+Find target indeces after sorting on leetcode.
+
+
+You are given a 0-indexed integer array nums and a target element target.
+
+A target index is an index i such that nums[i] == target.
+
+Return a list of the target indices of nums after sorting nums in non-decreasing order. If there are no target indices, return an empty list. The returned list must be sorted in increasing order.
+
+ 
+
+Example 1:
+
+Input: nums = [1,2,5,2,3], target = 2
+Output: [1,2]
+Explanation: After sorting, nums is [1,2,2,3,5].
+The indices where nums[i] == 2 are 1 and 2.
+Example 2:
+
+Input: nums = [1,2,5,2,3], target = 3
+Output: [3]
+Explanation: After sorting, nums is [1,2,2,3,5].
+The index where nums[i] == 3 is 3.
+Example 3:
+
+Input: nums = [1,2,5,2,3], target = 5
+Output: [4]
+Explanation: After sorting, nums is [1,2,2,3,5].
+The index where nums[i] == 5 is 4.
+ 
+
+Constraints:
+
+1 <= nums.length <= 100
+1 <= nums[i], target <= 100
+
+
+Code:---
+
+#include <iostream>
+#include <vector>
+#include <algorithm> // For std::sort
+
+using namespace std;
+
+vector<int> targetIndices(vector<int>& nums, int target) {
+    // Step 1: Sort the array in non-decreasing order
+    sort(nums.begin(), nums.end());
+    
+    vector<int> result;
+    // Step 2: Collect indices of elements equal to the target
+    for (int i = 0; i < nums.size(); i++) {
+        if (nums[i] == target) {
+            result.push_back(i); // Append the index
+        }
+    }
+    return result;
+}
+
+int main() {
+    // Example 1
+    vector<int> nums1 = {1, 2, 5, 2, 3};
+    int target1 = 2;
+    vector<int> result1 = targetIndices(nums1, target1);
+    for (int idx : result1) cout << idx << " "; // Output: 1 2
+    cout << endl;
+
+    // Example 2
+    vector<int> nums2 = {1, 2, 5, 2, 3};
+    int target2 = 3;
+    vector<int> result2 = targetIndices(nums2, target2);
+    for (int idx : result2) cout << idx << " "; // Output: 3
+    cout << endl;
+
+    // Example 3
+    vector<int> nums3 = {1, 2, 5, 2, 3};
+    int target3 = 5;
+    vector<int> result3 = targetIndices(nums3, target3);
+    for (int idx : result3) cout << idx << " "; // Output: 4
+    cout << endl;
+
+    return 0;
+}
+
+Que 4:-- Valid parenthesis on leet code.
+
+Code:
+#include <iostream>
+#include <stack>
+#include <unordered_map>
+using namespace std;
+
+bool isValid(string s) {
+    stack<char> stack;
+    // Mapping of closing brackets to opening brackets
+    unordered_map<char, char> mapping = {{')', '('}, {'}', '{'}, {']', '['}};
+    
+    for (char c : s) {
+        if (mapping.count(c)) { // If it is a closing bracket
+            // Get the top element of the stack, or a dummy value if the stack is empty
+            char topElement = stack.empty() ? '#' : stack.top();
+            stack.pop();
+            // If the mapping does not match, return false
+            if (mapping[c] != topElement) {
+                return false;
+            }
+        } else {
+            // It's an opening bracket, push onto the stack
+            stack.push(c);
+        }
+    }
+    
+    // If the stack is empty, the parentheses are valid
+    return stack.empty();
+}
+
+int main() {
+    string s = "{[()]}";
+    if (isValid(s)) {
+        cout << "Valid" << endl;
+    } else {
+        cout << "Invalid" << endl;
+    }
+    return 0;
+}
+
+
+Que 5:-
+
+Searching element from roateted Array on leet code .
+
+#include <iostream>
+#include <vector>
+using namespace std;
+
+int search(vector<int>& nums, int target) {
+    int left = 0, right = nums.size() - 1;
+
+    while (left <= right) {
+        int mid = left + (right - left) / 2;
+
+        // Check if the mid element is the target
+        if (nums[mid] == target) {
+            return mid;
+        }
+
+        // Check if the left half is sorted
+        if (nums[left] <= nums[mid]) {
+            // Target lies in the sorted left half
+            if (nums[left] <= target && target < nums[mid]) {
+                right = mid - 1;
+            } else { // Target is in the unsorted right half
+                left = mid + 1;
+            }
+        } 
+        // Otherwise, the right half is sorted
+        else {
+            // Target lies in the sorted right half
+            if (nums[mid] < target && target <= nums[right]) {
+                left = mid + 1;
+            } else { // Target is in the unsorted left half
+                right = mid - 1;
+            }
+        }
+    }
+
+    // If the element is not found
+    return -1;
+}
+
+int main() {
+    vector<int> nums = {4, 5, 6, 7, 0, 1, 2};
+    int target = 0;
+
+    int result = search(nums, target);
+    if (result != -1) {
+        cout << "Element found at index: " << result << endl;
+    } else {
+        cout << "Element not found" << endl;
+    }
+
+    return 0;
+}
+
+
+
+
+
 
 
 
