@@ -1,0 +1,143 @@
+*/    2. Stock Market Data Analysis
+A financial technology company needs to process real-time stock market data consisting of millions of trades every minute.
+Each trade record includes the timestamp, stock symbol, trade price, and trade volume. To identify patterns and generate analytics,
+the trades must be sorted by timestamp. For deeper insights, the company also requires sorting by stock symbol and grouping by trading volume trends.
+Handling this large-scale data efficiently is crucial for providing timely analytics to clients.*/
+
+
+Code::---
+
+
+#include <iostream>
+#include <vector>
+#include <string>
+#include <algorithm>
+#include <map>
+
+// Structure to represent a stock trade record
+struct TradeRecord {
+    long long timestamp;  // Timestamp of the trade (e.g., Unix timestamp)
+    std::string symbol;   // Stock symbol (e.g., AAPL, MSFT)
+    double price;         // Trade price
+    int volume;           // Trade volume
+
+    // Constructor
+    TradeRecord(long long t, const std::string& s, double p, int v)
+        : timestamp(t), symbol(s), price(p), volume(v) {}
+};
+
+// Comparator for sorting by timestamp
+bool sortByTimestamp(const TradeRecord& a, const TradeRecord& b) {
+    return a.timestamp < b.timestamp;
+}
+
+// Comparator for sorting by stock symbol
+bool sortBySymbol(const TradeRecord& a, const TradeRecord& b) {
+    return a.symbol < b.symbol;
+}
+
+// Group trades by volume trends
+std::map<std::string, std::vector<TradeRecord>> groupByVolumeTrends(const std::vector<TradeRecord>& trades) {
+    std::map<std::string, std::vector<TradeRecord>> groupedTrades;
+
+    for (const auto& trade : trades) {
+        if (trade.volume < 100) {
+            groupedTrades["Low Volume"].push_back(trade);
+        } else if (trade.volume >= 100 && trade.volume < 1000) {
+            groupedTrades["Medium Volume"].push_back(trade);
+        } else {
+            groupedTrades["High Volume"].push_back(trade);
+        }
+    }
+
+    return groupedTrades;
+}
+
+int main() {
+    // Sample dataset
+    std::vector<TradeRecord> trades = {
+        TradeRecord(1672531200, "AAPL", 145.30, 500),
+        TradeRecord(1672531300, "MSFT", 310.20, 1200),
+        TradeRecord(1672531400, "GOOGL", 2800.15, 50),
+        TradeRecord(1672531250, "AAPL", 145.50, 800),
+        TradeRecord(1672531350, "MSFT", 310.25, 300),
+        TradeRecord(1672531500, "GOOGL", 2810.00, 1200)
+    };
+
+    // Sort trades by timestamp
+    std::sort(trades.begin(), trades.end(), sortByTimestamp);
+
+    // Display trades sorted by timestamp
+    std::cout << "Trades Sorted by Timestamp:\n";
+    for (const auto& trade : trades) {
+        std::cout << "Timestamp: " << trade.timestamp
+                  << ", Symbol: " << trade.symbol
+                  << ", Price: $" << trade.price
+                  << ", Volume: " << trade.volume << "\n";
+    }
+
+    // Sort trades by stock symbol
+    std::sort(trades.begin(), trades.end(), sortBySymbol);
+
+    // Display trades sorted by stock symbol
+    std::cout << "\nTrades Sorted by Stock Symbol:\n";
+    for (const auto& trade : trades) {
+        std::cout << "Timestamp: " << trade.timestamp
+                  << ", Symbol: " << trade.symbol
+                  << ", Price: $" << trade.price
+                  << ", Volume: " << trade.volume << "\n";
+    }
+
+    // Group trades by volume trends
+    std::map<std::string, std::vector<TradeRecord>> groupedTrades = groupByVolumeTrends(trades);
+
+    // Display trades grouped by volume trends
+    std::cout << "\nTrades Grouped by Volume Trends:\n";
+    for (const auto& group : groupedTrades) {
+        std::cout << group.first << ":\n";
+        for (const auto& trade : group.second) {
+            std::cout << "  Timestamp: " << trade.timestamp
+                      << ", Symbol: " << trade.symbol
+                      << ", Price: $" << trade.price
+                      << ", Volume: " << trade.volume << "\n";
+        }
+    }
+
+    return 0;
+}
+
+
+OUTPUT:
+
+Trades Sorted by Timestamp:
+Timestamp: 1672531200, Symbol: AAPL, Price: $145.3, Volume: 500
+Timestamp: 1672531250, Symbol: AAPL, Price: $145.5, Volume: 800
+Timestamp: 1672531300, Symbol: MSFT, Price: $310.2, Volume: 1200
+Timestamp: 1672531350, Symbol: MSFT, Price: $310.25, Volume: 300
+Timestamp: 1672531400, Symbol: GOOGL, Price: $2800.15, Volume: 50
+Timestamp: 1672531500, Symbol: GOOGL, Price: $2810, Volume: 1200
+
+Trades Sorted by Stock Symbol:
+Timestamp: 1672531200, Symbol: AAPL, Price: $145.3, Volume: 500
+Timestamp: 1672531250, Symbol: AAPL, Price: $145.5, Volume: 800
+Timestamp: 1672531400, Symbol: GOOGL, Price: $2800.15, Volume: 50
+Timestamp: 1672531500, Symbol: GOOGL, Price: $2810, Volume: 1200
+Timestamp: 1672531300, Symbol: MSFT, Price: $310.2, Volume: 1200
+Timestamp: 1672531350, Symbol: MSFT, Price: $310.25, Volume: 300
+
+Trades Grouped by Volume Trends:
+Low Volume:
+  Timestamp: 1672531400, Symbol: GOOGL, Price: $2800.15, Volume: 50
+Medium Volume:
+  Timestamp: 1672531200, Symbol: AAPL, Price: $145.3, Volume: 500
+  Timestamp: 1672531250, Symbol: AAPL, Price: $145.5, Volume: 800
+  Timestamp: 1672531350, Symbol: MSFT, Price: $310.25, Volume: 300
+High Volume:
+  Timestamp: 1672531300, Symbol: MSFT, Price: $310.2, Volume: 1200
+  Timestamp: 1672531500, Symbol: GOOGL, Price: $2810, Volume: 1200
+
+
+
+
+
+
