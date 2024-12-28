@@ -1,1 +1,89 @@
-mm
+/*Q1 . Add Two Numbers
+You are given two non-empty linked lists representing two non-negative integers. The digits are stored in reverse order, and each of their nodes contains a single digit. Add the two numbers and return the sum as a linked list.
+You may assume the two numbers do not contain any leading zero, except the number 0 itself.*/
+
+Code:
+
+#include <iostream>
+using namespace std;
+
+// Definition for singly-linked list.
+struct ListNode
+    {
+    int val;
+    ListNode* next;
+    ListNode(int x) : val(x), next(nullptr)
+    {
+    
+    }
+};
+
+// Function to add two numbers represented by linked lists
+ListNode* addTwoNumbers(ListNode* l1, ListNode* l2) {
+    ListNode* dummyHead = new ListNode(0); // Placeholder for result list
+    ListNode* current = dummyHead;        // Pointer to build the result list
+    int carry = 0;                        // Initialize carry to 0
+    
+    // Traverse both linked lists
+    while (l1 != nullptr || l2 != nullptr || carry)
+    {
+        int val1 = (l1 != nullptr) ? l1->val : 0; // Get value from l1 or 0 if null
+        int val2 = (l2 != nullptr) ? l2->val : 0; // Get value from l2 or 0 if null
+        int sum = val1 + val2 + carry;           // Sum the values and carry
+        
+        carry = sum / 10;                        // Update carry for the next addition
+        current->next = new ListNode(sum % 10); // Create a new node with the ones place
+        
+        current = current->next;                // Move to the next node
+        
+        if (l1 != nullptr) l1 = l1->next;       // Move to the next node in l1
+        if (l2 != nullptr) l2 = l2->next;       // Move to the next node in l2
+    }
+    
+    return dummyHead->next; // Return the next node of dummyHead (skip placeholder)
+}
+
+// Helper function to create a linked list from an array
+ListNode* createLinkedList(int arr[], int n) 
+    {
+    if (n == 0) return nullptr;
+    ListNode* head = new ListNode(arr[0]);
+    ListNode* current = head;
+    for (int i = 1; i < n; ++i) 
+    {
+        current->next = new ListNode(arr[i]);
+        current = current->next;
+    }
+    return head;
+}
+
+// Helper function to print a linked list
+void printLinkedList(ListNode* head) {
+    while (head != nullptr) 
+    {
+        cout << head->val << " ";
+        head = head->next;
+    }
+    cout << endl;
+}
+
+// Main function
+int main() 
+    {
+    // Input arrays
+    int arr1[] = {2, 4, 3}; // Represents the number 342
+    int arr2[] = {5, 6, 4}; // Represents the number 465
+
+    // Create linked lists from arrays
+    ListNode* l1 = createLinkedList(arr1, 3);
+    ListNode* l2 = createLinkedList(arr2, 3);
+
+    // Add the two numbers
+    ListNode* result = addTwoNumbers(l1, l2);
+
+    // Print the result
+    cout << "Result: ";
+    printLinkedList(result); // Output: 7 0 8
+
+    return 0;
+}
