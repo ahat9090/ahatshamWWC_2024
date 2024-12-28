@@ -1,0 +1,42 @@
+
+Q3: Remove Element
+
+Given an integer array nums sorted in non-decreasing order, remove the duplicates in-place such that each unique element appears only once. The relative order of the elements should be kept the same. Then return the number of unique elements in nums..
+
+
+Code:
+
+#include <iostream>
+#include <vector>
+using namespace std;
+
+int removeDuplicates(vector<int>& nums) {
+    if (nums.empty()) return 0; // Handle edge case of an empty array
+
+    int uniqueIndex = 0; // Pointer for the last unique element's position
+
+    for (int i = 1; i < nums.size(); i++) {
+        if (nums[i] != nums[uniqueIndex]) {
+            uniqueIndex++;         // Move the uniqueIndex forward
+            nums[uniqueIndex] = nums[i]; // Update the position with the new unique element
+        }
+    }
+
+    return uniqueIndex + 1; // Number of unique elements
+}
+
+// Main function to test the implementation
+int main() {
+    vector<int> nums = {1, 1, 2, 2, 3, 4, 4, 5};
+
+    int uniqueCount = removeDuplicates(nums);
+
+    cout << "Number of unique elements: " << uniqueCount << endl;
+    cout << "Modified array: ";
+    for (int i = 0; i < uniqueCount; i++) {
+        cout << nums[i] << " ";
+    }
+    cout << endl;
+
+    return 0;
+}
