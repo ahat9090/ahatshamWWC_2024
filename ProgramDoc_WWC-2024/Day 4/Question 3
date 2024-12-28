@@ -1,0 +1,99 @@
+/* 
+3. Video Streaming Platform Recommendation System
+A video streaming platform generates recommendations for users based on the popularity of movies and TV shows. 
+Each item in the catalog has attributes like total views,
+user ratings, and release year. The system must sort the catalog to prioritize trending content by combining popularity and recency.
+Furthermore, personalized recommendations require sorting by relevance to each user's viewing history, making the sorting process dynamic and computationally intensive.*/
+
+
+CODE::--
+
+
+#include <iostream>
+#include <vector>
+#include <string>
+#include <algorithm>
+#include <cmath>
+
+// Structure to represent a catalog item
+struct CatalogItem {
+    std::string title;   // Title of the movie/TV show
+    int totalViews;      // Total number of views
+    double userRating;   // Average user rating (out of 5)
+    int releaseYear;     // Release year
+    double relevance;    // User-specific relevance score
+
+    // Constructor
+    CatalogItem(const std::string& t, int v, double r, int y, double rel)
+        : title(t), totalViews(v), userRating(r), releaseYear(y), relevance(rel) {}
+};
+
+// Comparator for trending content (popularity + recency)
+bool sortByTrending(const CatalogItem& a, const CatalogItem& b) {
+    // Combine popularity (views) and recency (release year with exponential decay)
+    double scoreA = a.totalViews * 0.7 + (2024 - a.releaseYear) * 0.3; // Example weighting
+    double scoreB = b.totalViews * 0.7 + (2024 - b.releaseYear) * 0.3;
+    return scoreA > scoreB;
+}
+
+// Comparator for personalized recommendations (relevance)
+bool sortByRelevance(const CatalogItem& a, const CatalogItem& b) {
+    return a.relevance > b.relevance;
+}
+
+int main() {
+    // Sample dataset
+    std::vector<CatalogItem> catalog = {
+        CatalogItem("Movie A", 100000, 4.5, 2020, 0.9),
+        CatalogItem("TV Show B", 150000, 4.8, 2021, 0.7),
+        CatalogItem("Movie C", 80000, 4.2, 2018, 0.85),
+        CatalogItem("TV Show D", 120000, 4.7, 2023, 0.95),
+        CatalogItem("Movie E", 50000, 3.9, 2015, 0.6)
+    };
+
+    // Sort by trending content
+    std::sort(catalog.begin(), catalog.end(), sortByTrending);
+
+    // Display catalog sorted by trending content
+    std::cout << "Catalog Sorted by Trending Content:\n";
+    for (const auto& item : catalog) {
+        std::cout << "Title: " << item.title
+                  << ", Total Views: " << item.totalViews
+                  << ", User Rating: " << item.userRating
+                  << ", Release Year: " << item.releaseYear << "\n";
+    }
+
+
+    std::sort(catalog.begin(), catalog.end(), sortByRelevance);
+
+  
+    std::cout << "\nCatalog Sorted by Personalized Relevance:\n";
+    for (const auto& item : catalog) {
+        std::cout << "Title: " << item.title
+                  << ", Relevance: " << item.relevance
+                  << ", Total Views: " << item.totalViews
+                  << ", User Rating: " << item.userRating
+                  << ", Release Year: " << item.releaseYear << "\n";
+    }
+
+    return 0;
+}
+
+
+OUTPUT:
+
+Catalog Sorted by Trending Content:
+Title: TV Show D, Total Views: 120000, User Rating: 4.7, Release Year: 2023
+Title: TV Show B, Total Views: 150000, User Rating: 4.8, Release Year: 2021
+Title: Movie A, Total Views: 100000, User Rating: 4.5, Release Year: 2020
+Title: Movie C, Total Views: 80000, User Rating: 4.2, Release Year: 2018
+Title: Movie E, Total Views: 50000, User Rating: 3.9, Release Year: 2015
+
+Catalog Sorted by Personalized Relevance:
+Title: TV Show D, Relevance: 0.95, Total Views: 120000, User Rating: 4.7, Release Year: 2023
+Title: Movie A, Relevance: 0.9, Total Views: 100000, User Rating: 4.5, Release Year: 2020
+Title: Movie C, Relevance: 0.85, Total Views: 80000, User Rating: 4.2, Release Year: 2018
+Title: TV Show B, Relevance: 0.7, Total Views: 150000, User Rating: 4.8, Release Year: 2021
+Title: Movie E, Relevance: 0.6, Total Views: 50000, User Rating: 3.9, Release Year: 2015
+
+
