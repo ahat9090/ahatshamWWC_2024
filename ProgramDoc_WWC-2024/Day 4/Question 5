@@ -1,0 +1,116 @@
+/*
+5. Scheduling Ads for a Social Media Platform
+A social media platform runs advertisements for multiple advertisers, each targeting specific user demographics.
+Ads are prioritized based on factors like bid amount, engagement rates, and the remaining budget. To maximize revenue and user satisfaction,
+the platform must sort and schedule ads in real-time for millions of users while balancing competing priorities. Efficient sorting directly impacts ad visibility and revenue generation.*/
+
+
+CODE::--
+
+#include <iostream>
+#include <vector>
+#include <string>
+#include <algorithm>
+
+// Structure to represent an ad
+struct Ad {
+    std::string advertiser;
+    int bidAmount;        // Amount the advertiser is willing to pay
+    double engagementRate; // Engagement rate (0-1)
+    double remainingBudget; // Remaining budget for the ad campaign
+
+    // Constructor
+    Ad(const std::string& adName, int bid, double engagement, double budget)
+        : advertiser(adName), bidAmount(bid), engagementRate(engagement), remainingBudget(budget) {}
+};
+
+// Comparator to sort ads dynamically based on bid amount, engagement rate, and remaining budget
+bool sortAdsByPriority(const Ad& a, const Ad& b) {
+    // Primary: Bid amount (higher is better)
+    if (a.bidAmount != b.bidAmount)
+        return a.bidAmount > b.bidAmount;
+
+    // Secondary: Engagement rate (higher is better)
+    if (a.engagementRate != b.engagementRate)
+        return a.engagementRate > b.engagementRate;
+
+    // Tertiary: Remaining budget (higher is better)
+    return a.remainingBudget > b.remainingBudget;
+}
+
+class AdPlatform {
+private:
+    std::vector<Ad> ads;
+
+public:
+    // Add a new ad to the system
+    void addAd(const std::string& advertiser, int bidAmount, double engagementRate, double remainingBudget) {
+        ads.push_back(Ad(advertiser, bidAmount, engagementRate, remainingBudget));
+        // Sort the ads immediately after adding a new one
+        std::sort(ads.begin(), ads.end(), sortAdsByPriority);
+    }
+
+    // Display the sorted ad list
+    void displayAds() {
+        std::cout << "\nSorted Ads (by Priority):\n";
+        for (const auto& ad : ads) {
+            std::cout << "Advertiser: " << ad.advertiser
+                      << ", Bid Amount: $" << ad.bidAmount
+                      << ", Engagement Rate: " << ad.engagementRate
+                      << ", Remaining Budget: $" << ad.remainingBudget << "\n";
+        }
+    }
+
+    // Remove an ad after its campaign has ended or it has been displayed
+    void removeAd(const std::string& advertiser) {
+        auto it = std::find_if(ads.begin(), ads.end(),
+                               [&advertiser](const Ad& ad) { return ad.advertiser == advertiser; });
+
+        if (it != ads.end()) {
+            ads.erase(it);
+            std::cout << "Ad from " << advertiser << " has been removed from the platform.\n";
+        } else {
+            std::cout << "Ad not found.\n";
+        }
+    }
+};
+
+int main() {
+    AdPlatform platform;
+
+    // Simulating ad submissions
+    platform.addAd("Brand A", 500, 0.85, 1000); // High bid, decent engagement, high budget
+    platform.addAd("Brand B", 600, 0.90, 500);  // Higher bid, higher engagement, lower budget
+    platform.addAd("Brand C", 450, 0.80, 1500); // Medium bid, lower engagement, higher budget
+    platform.addAd("Brand D", 700, 0.75, 1200); // Very high bid, moderate engagement, moderate budget
+    platform.addAd("Brand E", 550, 0.88, 800);  // Moderate bid, very high engagement, moderate budget
+
+    // Display the sorted list of ads
+    platform.displayAds();
+
+    // Removing an ad after its campaign ends
+    platform.removeAd("Brand B");
+
+    // Display the updated list of ads
+    platform.displayAds();
+
+    return 0;
+}
+
+
+OUTPUT::--
+
+Sorted Ads (by Priority):
+Advertiser: Brand D, Bid Amount: $700, Engagement Rate: 0.75, Remaining Budget: $1200
+Advertiser: Brand B, Bid Amount: $600, Engagement Rate: 0.90, Remaining Budget: $500
+Advertiser: Brand E, Bid Amount: $550, Engagement Rate: 0.88, Remaining Budget: $800
+Advertiser: Brand A, Bid Amount: $500, Engagement Rate: 0.85, Remaining Budget: $1000
+Advertiser: Brand C, Bid Amount: $450, Engagement Rate: 0.80, Remaining Budget: $1500
+
+Ad from Brand B has been removed from the platform.
+
+Sorted Ads (by Priority):
+Advertiser: Brand D, Bid Amount: $700, Engagement Rate: 0.75, Remaining Budget: $1200
+Advertiser: Brand E, Bid Amount: $550, Engagement Rate: 0.88, Remaining Budget: $800
+Advertiser: Brand A, Bid Amount: $500, Engagement Rate: 0.85, Remaining Budget: $1000
+Advertiser: Brand C, Bid Amount: $450, Engagement Rate: 0.80, Remaining Budget: $1500
