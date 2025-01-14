@@ -30,11 +30,6 @@ Assigning Remainder to user by their email id
 
 ![image](https://user-images.githubusercontent.com/97835784/219105859-7ed7c7bf-f021-4126-9bc0-7e2ec26697fe.png)
 
-![image](https://user-images.githubusercontent.com/97835784/219105905-cf4ddce4-e23b-4815-9532-c6dec04967a3.png)
-
-After Assigning remainder 
-
-![image](https://user-images.githubusercontent.com/97835784/219106062-16c64750-113d-45e8-8441-51912ebdaac8.png)
 
 Mail Remainder
 
