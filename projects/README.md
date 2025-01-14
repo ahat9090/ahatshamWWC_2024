@@ -28,16 +28,12 @@ All the tax infos
 
 Assigning Remainder to user by their email id
 
-![image](https://user-images.githubusercontent.com/97835784/219105859-7ed7c7bf-f021-4126-9bc0-7e2ec26697fe.png)
-
 
 Mail Remainder
 
 ![image](https://user-images.githubusercontent.com/97835784/219107072-d5ec63df-f869-438d-9d59-47fb9676aa4c.png)
 
 After Marking Paid
-
-![image](https://user-images.githubusercontent.com/97835784/219106161-cab05dfe-9aea-4ef1-919d-071a273e75a1.png)
 
 About Page
 
